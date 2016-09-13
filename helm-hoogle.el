@@ -36,6 +36,8 @@
   "Use helm to navigate query results from Hoogle"
   :group 'helm)
 
+(defvar helm-c-hoogle-transform-hook nil)
+
 (defun helm-c-hoogle-set-candidates (&optional request-prefix)
   (let* ((pattern (or (and request-prefix
                            (concat request-prefix
@@ -52,6 +54,7 @@
     (let (candidates)
       (with-temp-buffer
         (apply #'call-process "hoogle" nil t nil args)
+        (run-hooks 'helm-c-hoogle-transform-hook)
         (goto-char (point-min))
         (while (not (eobp))
           (if (looking-at "\\(.+?\\) -- \\(.+\\)")
