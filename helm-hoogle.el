@@ -36,14 +36,6 @@
   "Use helm to navigate query results from Hoogle"
   :group 'helm)
 
-(defvar helm-c-source-hoogle
-  '((name . "Hoogle")
-    (candidates . helm-c-hoogle-set-candidates)
-    (action . (("Lookup Entry" . eww-browse-url)))
-    (filtered-candidate-transformer . (lambda (candidates source) candidates))
-    (volatile)
-    (delayed)))
-
 (defun helm-c-hoogle-set-candidates (&optional request-prefix)
   (let* ((pattern (or (and request-prefix
                            (concat request-prefix
@@ -72,8 +64,12 @@
 ;;;###autoload
 (defun helm-hoogle ()
   (interactive)
-  (helm :sources 'helm-c-source-hoogle
-        :input ""
+  (helm :sources
+        (helm-build-sync-source "Hoogle"
+          :candidates #'helm-c-hoogle-set-candidates
+          :action '(("Lookup Entry" browse-url))
+          :filtered-candidate-transformer (lambda (candidates source) candidates)
+          :volatile t)
         :prompt "Hoogle: "
         :buffer "*Hoogle search*"))
 
