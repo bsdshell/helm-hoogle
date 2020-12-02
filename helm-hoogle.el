@@ -48,6 +48,8 @@
               (match-string 1 pattern)
             pattern))
          (lim helm-candidate-number-limit)
+         ;; hoogle option
+         ;; hoogle search -l -n 4 split  => show 4 results only
          (args (append (list "search" "-l")
                        (and lim (list "-n" (int-to-string lim)))
                        (list short-pattern))))
@@ -56,6 +58,12 @@
         (apply #'call-process "hoogle" nil t nil args)
         (run-hooks 'helm-c-hoogle-transform-hook)
         (goto-char (point-min))
+        
+        ;; 
+        ;; Data.Aeson.Encoding string :: String -> Encoding' a -- https://hackage.haskell.org/package/aeson/docs/Data-Aeson-Encoding.html#v:string
+        ;; groups:  (..) -- (..)
+        ;; "\\(.+?\\) -- \\(.+\\)"
+        ;; Push group 1 and group 2 to a list => candidates 
         (while (not (eobp))
           (if (looking-at "\\(.+?\\) -- \\(.+\\)")
               (push (cons (match-string 1)
