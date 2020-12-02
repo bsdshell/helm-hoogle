@@ -1,5 +1,5 @@
 # helm-hoogle
 Use helm to navigate query results from Hoogle
-# Search hoogle inside Emacs
+# Just try to learn Elisp and read Elisp code
 #
 #
